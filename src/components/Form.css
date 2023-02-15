@@ -42,6 +42,8 @@
     border-radius: 2px;
     padding: 10px;
     border: none;
+    color: white;
+    font-weight: 700;
 }
 
 .form-button-active{
@@ -51,4 +53,14 @@
     border-radius: 2px;
     padding: 10px;
     border: none;
+    color: white;
+    font-weight: 700;
+}
+
+
+.disclaimer{
+    font-weight: 500;
+    font-size: 12px;
+    text-align: center;
+    color: #C2C2C2;;
 }

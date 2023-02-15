@@ -57,6 +57,7 @@ const Form = ()=>{
                 <input name='password' type="password" placeholder='Password' onChange={handleChange} value={formValues.password}/>
                 <Select className='form-select' options={options}  placeholder={selectPlaceHolder} onChange={handleSelect} isMulti  isClearable={true} hideSelectedOptions={true}/>
                 {active?<button className='form-button-active'   onClick={claimTrial}>CLAIM YOUR FREE TRIAL</button>:<button className='form-button'>CLAIM YOUR FREE TRIAL</button>}
+            <div className='disclaimer'>By clicking the button you are agreeing to our <span style={{color:"red"}}>Terms and Services</span></div>
             </div>
         </div>
     )
