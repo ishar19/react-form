@@ -30,6 +30,7 @@ const Form = ()=>{
         setHeader("You have successfully subscribed to our plan")
         setFromValues({"name":"","email":"","password":""})
         setSelect([])
+        setActive(false)
         setSelectPlaceHolder("Choose Skills")
     }
     const isFromSubmit =()=>{
@@ -52,8 +53,8 @@ const Form = ()=>{
                 <input name='name'  type="text" placeholder='Name' onChange={handleChange} value={formValues.name}/>
                 <input name="email" type="email" placeholder='Email Address' onChange={handleChange} value={formValues.email}/>
                 <input name='password' type="password" placeholder='Password' onChange={handleChange} value={formValues.password}/>
-                <Select className='form-select' options={options}  placeholder={selectPlaceHolder} onChange={handleSelect} isMulti/>
-                {active?<button className='form-button-active'onClick={claimTrial}>CLAIM YOUR FREE TRIAL</button>:<button className='form-button'>CLAIM YOUR FREE TRIAL</button>}
+                <Select className='form-select' options={options}  placeholder={selectPlaceHolder} onChange={handleSelect} isMulti defaultValue={null}/>
+                {active?<button className='form-button-active' onClick={claimTrial}>CLAIM YOUR FREE TRIAL</button>:<button className='form-button'>CLAIM YOUR FREE TRIAL</button>}
             </div>
         </div>
     )
