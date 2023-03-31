@@ -1,66 +1,137 @@
-import { useState, useEffect, useRef } from 'react';
-import Select from 'react-select'
+import { useState, useEffect, useRef } from "react";
+import styles from "./Form.module.css";
 
-import './Form.css'
+const Form = () => {
+  const [formValues, setFormValues] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-const options = [
-  { value: 'HTML', label: 'HTML' },
-  { value: 'CSS', label: 'CSS' },
-  { value: 'JS', label: 'JS' },
-  {value:"NODE",label:"NODE"}
-]
+  const [skills, setSkills] = useState([]);
+  const [active, setActive] = useState(false);
+  const [header, setHeader] = useState(
+    "Try it free 7 days then ₹180/mo. thereafter"
+  );
 
-const Form = ()=>{
-    const [formValues, setFromValues] = useState({"name":"","email":"","password":""})
-    const [select, setSelect] = useState([])
-    const [selectPlaceHolder, setSelectPlaceHolder] = useState("Choose Skills")
-    const [active, setActive] = useState(false)
-    const [header,setHeader]= useState("Try it free 7 days then ₹180/mo. thereafter")
-    const handleChange = (e)=>{
-        setFromValues({...formValues,[e.target.name]:e.target.value})
+  const handleInputChange = (event) => {
+    setFormValues({ ...formValues, [event.target.name]: event.target.value });
+  };
+
+  const handleSkillsChange = (event) => {
+    const selectedSkill = event.target.value;
+    event.target.value = "";
+    event.target.setCustomValidity("");
+    if (selectedSkill && !skills.includes(selectedSkill)) {
+      setSkills((prevSkills) => [...prevSkills, selectedSkill]);
     }
-    const handleSelect = (e)=>{
-        // e.map((info)=>{
-        //     console.log(info)
-        //     setSelect((prev)=>[...prev,{...info}])
-        // })
-        setSelect([...e])
-        console.log(e)  // imp
-        console.log(select) //imp
+  };
+  const handleRemoveSkill = (skillToRemove) => {
+    setSkills((prevSkills) =>
+      prevSkills.filter((skill) => skill !== skillToRemove)
+    );
+  };
+  const isFormSubmit = () => {
+    if (
+      formValues.name &&
+      formValues.email &&
+      formValues.password &&
+      skills.length > 0
+    ) {
+      return true;
+    } else {
+      if (skills.length == 0) {
+        document
+          .getElementById("formSelect")
+          .setCustomValidity("Please select an item in the list");
+        document.getElementById("formSelect").reportValidity();
+      }
+      return false;
     }
-    const claimTrial= ()=>{
-        setHeader("You have successfully subscribed to our plan")
-        setFromValues({"name":"","email":"","password":""})
-        setSelect([])
-        setActive(false)
-        setSelectPlaceHolder((prev)=>prev)
+  };
+
+  const claimTrial = (event) => {
+    event.preventDefault();
+    if (!isFormSubmit()) {
+      return;
     }
-    const isFromSubmit =()=>{
-        for (const value in formValues) {
-            if(formValues[value].length==0){
-                return false
-            }
-        }
-        return true
-    }
-    useEffect(()=>{
-        if(select.length>0 && isFromSubmit()){
-            setActive(true)
-        }
-    },[select,formValues])
-    return(
-        <div className='form'>
-            <div className='form-header'>{header}</div>
-            <div className='form-body'>
-                <input name='name'  type="text" placeholder='Name' onChange={handleChange} value={formValues.name}/>
-                <input name="email" type="email" placeholder='Email Address' onChange={handleChange} value={formValues.email}/>
-                <input name='password' type="password" placeholder='Password' onChange={handleChange} value={formValues.password}/>
-                <Select className='form-select' options={options}  placeholder={selectPlaceHolder} onChange={handleSelect} isMulti value={select}  isClearable={true} hideSelectedOptions={true}/>
-                {active?<button className='form-button-active'   onClick={claimTrial}>CLAIM YOUR FREE TRIAL</button>:<button className='form-button'>CLAIM YOUR FREE TRIAL</button>}
-            <div className='disclaimer'>By clicking the button you are agreeing to our <span style={{color:"red"}}>Terms and Services</span></div>
-            </div>
+    setHeader("You have successfully subscribed to our plan");
+    setFormValues({ name: "", email: "", password: "" });
+    setSkills([]);
+    setActive(false);
+  };
+
+  useEffect(() => {
+    setActive(skills.length > 0 && isFormSubmit());
+  }, [skills, formValues]);
+
+  return (
+    <div className={styles.form}>
+      <div className={styles.formHeader}>{header}</div>
+      <form className={styles.formBody} onSubmit={claimTrial}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          value={formValues.name}
+          onChange={handleInputChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Email Address"
+          value={formValues.email}
+          onChange={handleInputChange}
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formValues.password}
+          onChange={handleInputChange}
+          required
+        />
+        <select
+          id="formSelect"
+          name="skills"
+          className={styles.formSelect}
+          onChange={handleSkillsChange}
+        >
+          <option value="">Choose Skills</option>
+          <option value="HTML">HTML</option>
+          <option value="CSS">CSS</option>
+          <option value="JS">JS</option>
+        </select>
+
+        {skills && (
+          <div className={styles.skills}>
+            {skills.map((skill) => {
+              return (
+                <div key={skill} className={styles.skillTag}>
+                  {skill} &nbsp;
+                  <span onClick={() => handleRemoveSkill(skill)}>X</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          className={`${active ? styles.formButtonActive : styles.formButton}`}
+        >
+          CLAIM YOUR FREE TRIAL
+        </button>
+
+        <div className={styles.disclaimer}>
+          By clicking the button you are agreeing to our{" "}
+          <span style={{ color: "red" }}>Terms and Services</span>
         </div>
-    )
-}
+      </form>
+    </div>
+  );
+};
 
 export default Form;
